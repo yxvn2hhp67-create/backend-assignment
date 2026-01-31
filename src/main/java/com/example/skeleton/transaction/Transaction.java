@@ -31,7 +31,7 @@ public class Transaction {
     private String description;
 
     @NotNull
-    private BigDecimal value;
+    private BigDecimal amount;
 
     @NotNull
     private String type;
@@ -39,11 +39,11 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Account account, LocalDate date, String description, BigDecimal value, String type) {
+    public Transaction(Account account, LocalDate date, String description, BigDecimal amount, String type) {
         this.account = account;
         this.date = date;
         this.description = description;
-        this.value = value;
+        this.amount = amount;
         this.type = type;
     }
 
@@ -79,12 +79,12 @@ public class Transaction {
         this.description = description;
     }
 
-    public BigDecimal getValue() {
-        return value;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setValue(BigDecimal value) {
-        this.value = value;
+    public void setAmount(BigDecimal value) {
+        this.amount = value;
     }
 
     public String getType() {
