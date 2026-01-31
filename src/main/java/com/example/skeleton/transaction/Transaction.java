@@ -8,10 +8,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "app_transactions")
@@ -25,21 +24,18 @@ public class Transaction {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    @NotNull
-    private LocalDate date;
+    private Date date;
 
     private String description;
 
-    @NotNull
     private BigDecimal amount;
 
-    @NotNull
     private String type;
 
     public Transaction() {
     }
 
-    public Transaction(Account account, LocalDate date, String description, BigDecimal amount, String type) {
+    public Transaction(Account account, Date date, String description, BigDecimal amount, String type) {
         this.account = account;
         this.date = date;
         this.description = description;
@@ -63,11 +59,11 @@ public class Transaction {
         this.account = account;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -93,5 +89,10 @@ public class Transaction {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public enum TransactionType {
+        EXPENSE,
+        INCOME
     }
 }
