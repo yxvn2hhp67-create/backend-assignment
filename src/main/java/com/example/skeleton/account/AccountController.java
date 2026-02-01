@@ -1,6 +1,7 @@
 package com.example.skeleton.account;
 
 import com.example.skeleton.exceptions.InvalidAccountRequestException;
+import com.example.skeleton.transaction.TransactionRepository;
 import com.example.skeleton.user.User;
 import com.example.skeleton.exceptions.UserNotFoundException;
 import com.example.skeleton.user.UserRepository;
@@ -17,15 +18,26 @@ public class AccountController {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
 
-    public AccountController(AccountRepository accountRepository, UserRepository userRepository) {
+    public AccountController(AccountRepository accountRepository, UserRepository userRepository, TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @GetMapping("/{userId}")
     public List<Account> all(@PathVariable("userId") Long userId) {
-        return accountRepository.findByUser_Id(userId);
+        List<Account> accounts = accountRepository.findByUser_Id(userId);
+
+        for (Account account : accounts) {
+            BigDecimal computedBalance = transactionRepository.sumAmountByAccountId(account.getId());
+
+            // TODO consider having separate fields for initial balance and total balance on response
+            account.setInitialBalance(computedBalance != null ? computedBalance : account.getInitialBalance());
+        }
+
+        return accounts;
     }
 
     @PostMapping
