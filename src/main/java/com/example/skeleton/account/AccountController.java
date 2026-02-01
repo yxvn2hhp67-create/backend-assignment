@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -20,6 +21,11 @@ public class AccountController {
     public AccountController(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+    }
+
+    @GetMapping("/{userId}")
+    public List<Account> all(@PathVariable("userId") Long userId) {
+        return accountRepository.findByUser_Id(userId);
     }
 
     @PostMapping

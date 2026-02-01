@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -21,6 +22,11 @@ public class TransactionController {
     public TransactionController(TransactionRepository transactionRepository, AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+    }
+
+    @GetMapping("/{accountId}")
+    public List<Transaction> all(@PathVariable("accountId") Long accountId) {
+        return transactionRepository.findByAccount_Id(accountId);
     }
 
     @PostMapping
