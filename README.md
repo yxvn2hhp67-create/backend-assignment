@@ -1,20 +1,55 @@
-Mambu Fullstack Skeleton Backend
-
-- This is a skeleton Spring Boot application intended to speed up the challenge solution.
-- It has an H2 in-memory database configured by default.
-- It has full end-to-end (e2e) configuration so you can run and verify the service as-is.
+Spring Boot REST API with an H2 in-memory database. 
+Exposes endpoints for users, accounts, and transactions.
 
 Quick start
-- Requirements: Java 17+
-- Run: ./mvnw spring-boot:run
-- Base URL: http://localhost:8080
 
-Example API (Tasks)
-- GET /api/tasks — list tasks
-- GET /api/tasks/{id} — get a task by id
-- POST /api/tasks — create { "title": "My task", "completed": false }
-- PUT /api/tasks/{id} — update { "title": "New title", "completed": true }
-- DELETE /api/tasks/{id} — delete
+Requirements: Java 17+
+Run: ./mvnw spring-boot:run
+Base URL: http://localhost:8080
 
-Notes
-- You can freely modify or extend this skeleton for your challenge.
+API endpoints
+
+Accounts (/api/accounts)
+
+GET /{userId} - List all accounts for the given user. Each account's initialBalance in the response is the computed balance (initial balance plus or minus transactions).
+
+POST - Create an account. Body: userId, accountName, initialBalance. Returns the created account. Fails if the user does not exist or the account name already exists for that user.
+
+Example POST body: { "userId": 1, "accountName": "Checking", "initialBalance": 1000.50 }
+
+Transactions (/api/transactions)
+
+GET /{accountId} - List all transactions for the given account.
+
+POST - Create a transaction. Body: accountId, amount, date, description, type ("EXPENSE" or "INCOME", case-insensitive). Returns the created transaction. Fails if the account does not exist.
+
+Example POST body: { "accountId": 1, "amount": 50.25, "date": "2025-01-31", "description": "Coffee", "type": "expense" }
+
+Error responses
+
+400 - Validation or business rule (e.g. duplicate account name, invalid type).
+404 - User or account not found when required by the request.
+
+Errors return a JSON body with timestamp, status, error, message, and optionally fieldErrors.
+
+Database schema
+
+H2 in-memory DB; tables are created from JPA entities.
+
+user
+| id     | Long (Primary Key)
+| name   | String 
+
+account
+| id             | Long (Primary Key)
+| account_name   | String
+| initial_balance| BigDecimal
+| user_id        | Long (Foreign Key for user table)
+
+transactions
+| id         | Long (Primary Key)
+| account_id | Long (Foreign Key for account table)
+| date       | Date   
+| description| String
+| amount     | BigDecimal
+| type       | String
