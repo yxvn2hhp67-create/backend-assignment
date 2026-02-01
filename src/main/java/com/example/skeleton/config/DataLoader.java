@@ -1,7 +1,7 @@
 package com.example.skeleton.config;
 
-import com.example.skeleton.task.Task;
-import com.example.skeleton.task.TaskRepository;
+import com.example.skeleton.user.User;
+import com.example.skeleton.user.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +10,10 @@ import org.springframework.context.annotation.Configuration;
 public class DataLoader {
 
     @Bean
-    CommandLineRunner seedTasks(TaskRepository repo) {
+    CommandLineRunner seedUsers(UserRepository userRepo) {
         return args -> {
-            if (repo.count() == 0) {
-                repo.save(new Task("Review requirements", false));
-                repo.save(new Task("Design API", true));
-                repo.save(new Task("Implement frontend", false));
+            if (userRepo.count() == 0) {
+                userRepo.save(new User("John Example"));
             }
         };
     }

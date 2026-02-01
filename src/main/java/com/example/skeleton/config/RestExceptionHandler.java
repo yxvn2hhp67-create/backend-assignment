@@ -1,7 +1,6 @@
 package com.example.skeleton.config;
 
-import com.example.skeleton.task.TaskNotFoundException;
-import org.springframework.http.HttpStatus;
+import com.example.skeleton.exceptions.InvalidRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,14 +14,16 @@ import java.util.Map;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(TaskNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(TaskNotFoundException ex) {
+    @ExceptionHandler({InvalidRequestException.class})
+    public ResponseEntity<Map<String, Object>> handleNotFound(InvalidRequestException ex) {
+
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", Instant.now().toString());
-        body.put("status", 404);
-        body.put("error", "Not Found");
+        body.put("status", ex.getStatus().value());
+        body.put("error", ex.getError());
         body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+
+        return ResponseEntity.status(ex.getStatus()).body(body);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
